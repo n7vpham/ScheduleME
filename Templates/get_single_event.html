@@ -1,0 +1,15 @@
+{% extends '_layout.html' %}
+
+{% block title %}Name of Website | Event{% endblock %}
+
+{% block body %}
+<h1 class="mb-5">{{ event.name }}</h1>
+
+<p>Event Time: {{ event.time }} </p>
+<p>Location: {{ event.location }} </p>
+
+<button type="submit" class="btn btn-primary">Edit</button>
+<button type="submit" class="btn btn-primary">Delete</button>
+
+
+{% endblock %}
