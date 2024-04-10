@@ -1,8 +1,14 @@
 from flask import Flask, redirect, render_template, request
+from dotenv import load_dotenv
+
+load_dotenv()
+
+
 
 
 app = Flask(__name__)
 
+<<<<<<< HEAD
 @app.get('/')
 def index():
     return render_template('index.html')
@@ -38,3 +44,9 @@ def search_event():
     #todo
     return render_template('search_event.html', search_active=True)
 
+=======
+'''@app.get('/')
+def index():
+    all_images = images_repo.get_all_images()
+    return render_template('index.html', images=all_images)'''
+>>>>>>> d5e8ad5 (changes made to app.py  abd templates folder)
