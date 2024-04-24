@@ -1,5 +1,9 @@
 from flask import Flask, redirect, render_template, request
+from dotenv import load_dotenv
 
+from repositories import event_repo
+
+load_dotenv()
 
 app = Flask(__name__)
 
@@ -37,4 +41,22 @@ def create_movie():
 def search_event():
     #todo
     return render_template('search_event.html', search_active=True)
+
+'''@app.get('/')
+def index():
+    all_images = images_repo.get_all_images()
+    return render_template('index.html', images=all_images)'''
+
+@app.get('/')
+def index():
+    all_events = event_repo.get_all_events_for_table()
+    print(all_events)
+    return render_template('index.html',events=all_events) 
+
+# THis route was meant to implement the get_event_by_title function from event_repo.py( Single even)
+'''@app.get('/event/<str:title>') 
+def get_event(title):
+    event = event_repo.get_event_by_title(title)
+    return render_template('events.html', events=event)
+'''
 
