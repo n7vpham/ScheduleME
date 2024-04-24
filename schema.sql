@@ -10,25 +10,17 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS events (
     event_id            SERIAL,
-<<<<<<< HEAD
-    event_description   VARCHAR(255)    NOT NULL, 
-=======
     event_description   VARCHAR(255)    NOT NULL,
->>>>>>> d372806 (Adding changes to implement All events)
     event_when          VARCHAR(255)    NOT NULL,
     event_where         VARCHAR(255)    NOT NULL,
     host_id             INT             NOT NULL,
     event_timestamp     TIMESTAMP       DEFAULT CURRENT_TIMESTAMP,
-<<<<<<< HEAD
+
     analytic_type       VARCHAR(255)    DEFAULT 'create event',            
     PRIMARY KEY (event_id), 
     FOREIGN KEY (host_id) REFERENCES users(user_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
-=======
-    analytic_type       VARCHAR(255)    DEFAULT 'create event',
-    PRIMARY KEY (event_id),
-    FOREIGN KEY (host_id) REFERENCES users(user_id) ON UPDATE CASCADE ON DELETE CASCADE
-);
+
 CREATE TABLE IF NOT EXISTS comment (
     comment_id          SERIAL,
     content             VARCHAR(255)   NOT NULL,
