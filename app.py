@@ -1,15 +1,26 @@
-from flask import Flask, redirect, render_template, request
+from flask import Flask, abort, redirect, render_template, request, session
 from dotenv import load_dotenv
-
-from repositories import event_repo
+from flask_bcrypt import Bcrypt
+from datetime import datetime
+import os
+import googlemaps
+from repositories import event_repo, user_repository
 
 load_dotenv()
 
 app = Flask(__name__)
 
+app.secret_key = os.getenv('APP_SECRET_KEY')
+
+gmaps = googlemaps.Client(key='AIzaSyDUNewuSDlRLem-I3kcBnvU6467VleNicM')
+
+
 @app.get('/')
 def index():
-    return render_template('index.html')
+    if 'user_id' in session:
+        return redirect('/listevents')
+    else:
+        return render_template('index.html')
 
 
 @app.get('/events')
@@ -41,3 +52,35 @@ def create_event():
     
     event_repo.create_event(host_id, event_name, event_description, start_time, end_time, event_address)
     return redirect('/events')
+
+@app.post('/signup')
+def signup():
+    username = request.form.get('username')
+    password = request.form.get('password')
+    if not username or not password:
+        abort(400)
+    does_user_exist = user_repository.does_username_exist(username)
+    if does_user_exist:
+        abort(400)
+    hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+    user_repository.create_user(username, hashed_password)
+    return redirect('/')
+
+@app.post('/login')
+def login():
+    username = request.form.get('username')
+    password = request.form.get('password')
+    if not username or not password:
+        abort(400)
+    user = user_repository.get_user_by_username(username)
+    if user is None:
+        abort(401)
+    if not bcrypt.check_password_hash(user['hashed_password'], password):
+        abort(401)
+    session['user_id'] = user['user_id']
+    return redirect('/listevents')
+
+@app.post('/logout')
+def logout():
+    del session['user_id']
+    return redirect('/')
