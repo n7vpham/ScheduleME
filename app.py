@@ -1,3 +1,4 @@
+
 import os
 from flask import Flask, abort, redirect, render_template, request, session
 from dotenv import load_dotenv
@@ -5,8 +6,6 @@ from flask_bcrypt import Bcrypt
 from repositories import user_repository
 from datetime import datetime
 import googlemaps
-
-
 
 load_dotenv()
 
@@ -27,6 +26,7 @@ def index():
 
 @app.get('/listevents')
 def list_all_events():
+
    if 'user_id' not in session:
                return redirect('/')
     user_id = session.get('user_id')
@@ -64,6 +64,7 @@ def signup():
     user_repository.create_user(username, hashed_password)
     return redirect('/')
 
+
 @app.post('/login')
 def login():
     username = request.form.get('username')
@@ -82,3 +83,5 @@ def login():
 def logout():
     del session['user_id']
     return redirect('/')
+
+
