@@ -1,25 +1,5 @@
 {% extends '_layout.html' %}
 
 {% block body %}
-    <h3 class="mt-4">All Events</h3>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Event</th>
-                <th>Date</th>
-                <th>Address</th>
-             
-            </tr>
-        </thead>
-        <tbody>
-            {% for event in events %}
-                <tr>
-                    <td><a href="/event/{{event.title }}">{{ event.title}}</a></td>
-                    <td>{{ event.start_time }}</td>
-                    <td>{{ event.address }}</td>
-                    
-                </tr>
-            {% endfor %}
-        </tbody>
-    </ul>
+    <a href="/events">List All Events</a>
 {% endblock %}
