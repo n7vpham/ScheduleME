@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS users (
     user_id             SERIAL,
     user_fname          VARCHAR(255)    NOT NULL,
     user_lname          VARCHAR(255)    NOT NULL,
-    user_username       VARCHAR(255)    UNIQUE NOT NULL,
+    user_email          VARCHAR(255)    UNIQUE NOT NULL,
     user_password       VARCHAR(255)    NOT NULL,
     user_since          TIMESTAMP       DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (user_id)
@@ -14,9 +14,7 @@ CREATE TABLE IF NOT EXISTS events (
     event_when          VARCHAR(255)    NOT NULL,
     event_where         VARCHAR(255)    NOT NULL,
     host_id             INT             NOT NULL,
-    event_timestamp     TIMESTAMP       DEFAULT CURRENT_TIMESTAMP,
-
-    analytic_type       VARCHAR(255)    DEFAULT 'create event',            
+    event_timestamp     TIMESTAMP       DEFAULT CURRENT_TIMESTAMP,          
     PRIMARY KEY (event_id), 
     FOREIGN KEY (host_id) REFERENCES users(user_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
@@ -46,7 +44,6 @@ ALTER TABLE events
     Drop COLUMN  event_description,
     DROP  COLUMN event_when,
     DROP COLUMN  event_where,
-    DROP COLUMN  analytic_type,
     DROP COLUMN  event_timestamp;
 
 ALTER TABLE events
@@ -58,11 +55,11 @@ ALTER TABLE events
 
 
 
-Insert into users (user_fname, user_lname, user_username, user_password) values ('John', 'Doe', 'johndoe', 'password'); 
-Insert into users (user_fname, user_lname, user_username, user_password) values ('Jane', 'Doe', 'janedoe', 'password1'); 
+Insert into users (user_fname, user_lname, user_email, user_password) values ('John', 'Doe', 'johndoe@gmail.com', 'password'); 
+Insert into users (user_fname, user_lname, user_email, user_password) values ('Jane', 'Doe', 'janedoe@gmail.com', 'password1'); 
 
-Insert into events (title, description, start_time, end_time, address, host_id) values ('TOWNHALL MEETING', 'Come celebrate my birthday', '2021-12-12 12:00:00', '2021-12-12 15:00:00', '1234 Elm St', 09011);    
-Insert into events (title, description, start_time, end_time, address, host_id) values ('CAREER FAIR', 'UNCC CS Major career fair fo the semester', '2021-12-12 12:00:00', '2021-12-12 15:00:00', '1234 Elm St', 09012);    
+Insert into events (host_id, title, description, start_time, end_time, address) values (1, 'TOWNHALL MEETING', 'Come celebrate my birthday', '2021-12-12 12:00:00.436454', '2021-12-12 15:00:00.436454', '1234 Elm St');    
+Insert into events (host_id, title, description, start_time, end_time, address) values (2, 'CAREER FAIR', 'UNCC CS Major career fair fo the semester', '2021-12-12 12:00:00.464515', '2021-12-12 15:00:00.464515', '1234 Elm St');    
 
 
 

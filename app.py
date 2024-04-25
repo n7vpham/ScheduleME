@@ -15,15 +15,16 @@ def index():
 @app.get('/events')
 def list_all_events():
     # TODO: Feature 1
-    return render_template('list_all_events.html', list_events_active=True, event_list = list_all_events.get_all_events())
+    all_events = event_repo.get_all_events_for_table()
+    return render_template('list_all_events.html', events=all_events)
 
 
-@app.get('/events/new')
+'''@app.get('/events/new')
 def create_events_form():
-    return render_template('create_events_form.html')
+    return render_template('create_events_form.html')'''
 
 
-@app.post('/movies')
+'''@app.post('/movies')
 def create_movie():
     #basic input for events
     Name = request.form.get('name')
@@ -33,25 +34,25 @@ def create_movie():
     Address = request.form.get('address')
     
     movie_repository.create_movie(Name, EventName, Time, Address)
-    return redirect('/movies')
+    return redirect('/movies')'''
 
 
 
-@app.get('/events/search')
+'''@app.get('/events/search')
 def search_event():
     #todo
-    return render_template('search_event.html', search_active=True)
+    return render_template('search_event.html', search_active=True)'''
 
 '''@app.get('/')
 def index():
     all_images = images_repo.get_all_images()
     return render_template('index.html', images=all_images)'''
 
-@app.get('/')
+'''@app.get('/')
 def index():
     all_events = event_repo.get_all_events_for_table()
     print(all_events)
-    return render_template('index.html',events=all_events) 
+    return render_template('index.html',events=all_events)'''
 
 # THis route was meant to implement the get_event_by_title function from event_repo.py( Single even)
 '''@app.get('/event/<str:title>') 
@@ -60,3 +61,4 @@ def get_event(title):
     return render_template('events.html', events=event)
 '''
 
+''
