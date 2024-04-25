@@ -1,17 +1,20 @@
 {% extends '_layout.html' %}
 
-{% block title %}Name of Website | Event{% endblock %}
+{% block title %}Event Details{% endblock %}
 
 {% block body %}
-<head>
-<h1 class="mb-5">{{ event.name }}</h1>
-</head>
-<body>
-<p>Event Time: {{ event.time }} </p>
-<p>Location: {{ event.location }} </p>
-<p>To adjust the event time, location, or users, please go to the following sections: </p>
-<button type="submit" class="btn btn-primary">Edit</button>
-<button type="submit" class="btn btn-primary">Delete</button>
-</body>
+
+<div class="col-12 text-center mt-3">
+    <h2>Event Details</h2>
+</div>
+
+<ul class="list0inline text-center" style="list-style-type:none;">
+    <li>Event ID: {{ event.event_id }}</li>
+    <li>Name: {{ event.event_name }}</li>
+    <li>Description: {{ event.event_description }}</li>
+    <li>Start Time: {{ event.start_time }}</li>
+    <li>End Time: {{ event.end_time }}</li>
+    <li>Address: {{ event.event_address }}</li>
+</ul>
 
 {% endblock %}

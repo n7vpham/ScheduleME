@@ -18,47 +18,26 @@ def list_all_events():
     all_events = event_repo.get_all_events_for_table()
     return render_template('list_all_events.html', events=all_events)
 
+@app.get('/events/<int:event_id>')
+def get_event(event_id):
+    event = event_repo.get_event_by_id(event_id)
+    return render_template('get_single_event.html', event=event)
 
-'''@app.get('/events/new')
-def create_events_form():
-    return render_template('create_events_form.html')'''
+@app.get('/events/new')
+def new_event():
+    return render_template('create_event.html')
 
-
-'''@app.post('/movies')
-def create_movie():
-    #basic input for events
-    Name = request.form.get('name')
-    EventName = request.form.get('director')
-    Time = request.form.get('time')
-    #temp address input
-    Address = request.form.get('address')
+@app.post('/events')
+def create_event():
+    host_id = request.form['host_id']
+    event_name = request.form['event_name']
+    event_description = request.form['event_description']
+    start_time = request.form['start_time']
+    end_time = request.form['end_time']
+    event_address = request.form['event_address']
+    if not host_id or not event_name or not event_description or not start_time or not end_time or not event_address:
+        return 'Bad Request', 400
+    # More tests to be added
     
-    movie_repository.create_movie(Name, EventName, Time, Address)
-    return redirect('/movies')'''
-
-
-
-'''@app.get('/events/search')
-def search_event():
-    #todo
-    return render_template('search_event.html', search_active=True)'''
-
-'''@app.get('/')
-def index():
-    all_images = images_repo.get_all_images()
-    return render_template('index.html', images=all_images)'''
-
-'''@app.get('/')
-def index():
-    all_events = event_repo.get_all_events_for_table()
-    print(all_events)
-    return render_template('index.html',events=all_events)'''
-
-# THis route was meant to implement the get_event_by_title function from event_repo.py( Single even)
-'''@app.get('/event/<str:title>') 
-def get_event(title):
-    event = event_repo.get_event_by_title(title)
-    return render_template('events.html', events=event)
-'''
-
-''
+    event_repo.create_event(host_id, event_name, event_description, start_time, end_time, event_address)
+    return redirect('/events')

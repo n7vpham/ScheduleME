@@ -7,17 +7,51 @@ def get_all_events_for_table():
         with conn.cursor(row_factory=dict_row) as cur:
             cur.execute('''
                         SELECT
-                            title, 
-                        start_time,
-                        end_time, 
-                        address
+                            event_id,
+                            event_name, 
+                            start_time,
+                            end_time, 
+                            event_address
                         FROM 
                             events
                         ;
                         ''')
             return cur.fetchall()
         
-#this function was meant to implement the get_event_by_title function from event_repo.py( Single even)
-   
+def get_event_by_id(event_id : int):
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cur:
+            cur.execute('''
+                        SELECT
+                            event_id,
+                            event_name, 
+                            event_description,
+                            start_time,
+                            end_time, 
+                            event_address
+                        FROM 
+                            events
+                        WHERE event_id = %s
+                        ;
+                        ''', [event_id])
+            return cur.fetchone()
         
+def create_event(host_id: int, event_name: str, event_description: str, start_time: str, end_time: str, event_address: str):
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute('''
+                        INSERT INTO events
+                            (host_id, event_name, event_description, start_time, end_time, event_address)
+                        VALUES
+                            (%s, %s, %s, %s, %s, %s)
+                        RETURNING event_id
+                        ;
+                        ''', [host_id, event_name, event_description, start_time, end_time, event_address])
+            res = cur.fetchone()
+            if not res:
+                raise Exception('Failed to create event')
+            return res[0]
+            
         
