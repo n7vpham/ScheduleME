@@ -91,3 +91,19 @@ def login():
 def logout():
     del session['user_id']
     return redirect('/')
+
+#edit events
+
+@app.get('/events/<int:event_id>/edit')
+def get_edit_events_page(event_id: int):
+    return render_template('edit_event.html')
+
+
+@app.post('/events/<int:event_id>')
+def update_event(event_id: int):
+    return redirect(f'/events/{event_id}')
+
+
+@app.post('/events/<int:event_id>/delete')
+def delete_event(event_id: int):
+    return redirect(f'/events')
