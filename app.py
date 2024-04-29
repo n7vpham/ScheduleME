@@ -10,10 +10,11 @@ load_dotenv()
 
 app = Flask(__name__)
 
+bcrypt = Bcrypt(app)
+
 app.secret_key = os.getenv('APP_SECRET_KEY')
 
 gmaps = googlemaps.Client(key='AIzaSyDUNewuSDlRLem-I3kcBnvU6467VleNicM')
-
 
 @app.get('/')
 def index():
@@ -25,7 +26,6 @@ def index():
 
 @app.get('/events')
 def list_all_events():
-    # TODO: Feature 1
     all_events = event_repo.get_all_events_for_table()
     return render_template('list_all_events.html', events=all_events)
 
@@ -53,19 +53,26 @@ def create_event():
     event_repo.create_event(host_id, event_name, event_description, start_time, end_time, event_address)
     return redirect('/events')
 
-@app.post('/signup')
-def signup():
-    username = request.form.get('username')
-    password = request.form.get('password')
-    if not username or not password:
-        abort(400)
-    does_user_exist = user_repository.does_username_exist(username)
-    if does_user_exist:
-        abort(400)
-    hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-    user_repository.create_user(username, hashed_password)
-    return redirect('/')
+@app.get('/users')
+def new_user():
+    return render_template('user_registration.html')
 
+@app.post('/users')
+def register():
+    user_fname = request.form['user_fname']
+    user_lname = request.form['user_lname']
+    user_email = request.form['user_email']
+    user_password = request.form['user_password']
+    if not user_fname or not user_lname or not user_email or not user_password:
+        abort(400)
+    does_user_email_exist = user_repository.does_user_email_exist(user_email)
+    
+    if  does_user_email_exist:
+        return redirect('/')
+    hashed_password = bcrypt.generate_password_hash(user_password).decode('utf-8')
+    user_repository.create_user(user_fname, user_lname, user_email, hashed_password)
+    return redirect('/users')
+    
 @app.post('/login')
 def login():
     username = request.form.get('username')

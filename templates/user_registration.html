@@ -1,0 +1,30 @@
+{% extends '_layout.html' %}
+
+{% block title %}Register{% endblock %}
+
+
+{%block body%}
+<div class="col-12 text-center mt-3">
+    <h2>Register</h2>
+</div>
+<form action="/users" method="POST">
+    <div class="mb-3">
+        <label for="user_fname" class="form-label">First Name</label>
+        <input type="text" class="form-control" id="user_fname" name="user_fname" required placeholder="Enter your first name">
+    </div>
+    <div class="mb-3">
+        <label for="user_lname" class="form-label">Last Name</label>
+        <input type="text" class="form-control" id="user_lname" name="user_lname" required placeholder="Enter your last name">
+    </div>
+    <div class="mb-3">
+        <label for="user_email" class="form-label">Email</label>
+        <input type="user_email" class="form-control" id="user_email" name="user_email" required placeholder="Enter email">
+    </div>
+    <div class="mb-3">
+        <label for="user_password" class="form-label">Password</label>
+        <input type="user_password" class="form-control" id="user_password" name="user_password" required placeholder="Enter password">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+   
+    {%endblock%}
