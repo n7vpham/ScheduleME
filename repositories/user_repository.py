@@ -3,7 +3,7 @@ from repositories.db import get_pool
 from psycopg.rows import dict_row
 
 
-def does_username_exist(username: str) -> bool:
+def does_user_email_exist(user_email: str) -> bool:
     pool = get_pool()
     with pool.connection() as conn:
         with conn.cursor() as cur:
@@ -11,29 +11,32 @@ def does_username_exist(username: str) -> bool:
                         SELECT
                             user_id
                         FROM
-                            app_user
-                        WHERE username = %s
-                        ''', [username])
+                            users
+                        WHERE user_email = %s
+                        ''', [user_email])
             user_id = cur.fetchone()
+            print(user_id)
             return user_id is not None
 
 
-def create_user(username: str, password: str) -> dict[str, Any]:
+def create_user(user_fname: str,user_lname: str,user_email: str, user_password: str) -> dict[str, Any]:
     pool = get_pool()
     with pool.connection() as conn:
         with conn.cursor() as cur:
             cur.execute('''
-                        INSERT INTO app_user (username, password)
-                        VALUES (%s, %s)
+                        INSERT INTO users (user_fname, user_lname, user_email, user_password)
+                        VALUES (%s, %s, %s, %s)
                         RETURNING user_id
-                        ''', [username, password]
+                        ''', [user_fname, user_lname, user_email, user_password]
                         )
             user_id = cur.fetchone()
+            
             if user_id is None:
                 raise Exception('failed to create user')
+            
             return {
                 'user_id': user_id,
-                'username': username
+                'user_email': user_email
             }
 
 
