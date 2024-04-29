@@ -14,7 +14,6 @@ def index():
 
 @app.get('/events')
 def list_all_events():
-    # TODO: Feature 1
     all_events = event_repo.get_all_events_for_table()
     return render_template('list_all_events.html', events=all_events)
 
@@ -41,3 +40,17 @@ def create_event():
     
     event_repo.create_event(host_id, event_name, event_description, start_time, end_time, event_address)
     return redirect('/events')
+
+@app.get('/events/<int:event_id>/edit')
+def get_edit_events_page(event_id: int):
+    return render_template('edit_event.html')
+
+
+@app.post('/events/<int:event_id>')
+def update_event(event_id: int):
+    return redirect(f'/events/{event_id}')
+
+
+@app.post('/events/<int:event_id>/delete')
+def delete_event(event_id: int):
+    return redirect(f'/events')
