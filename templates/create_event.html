@@ -34,11 +34,28 @@
         <!-- type="datetime-local" -->
     </div>
     <div class="mb-3">
-        <label for="event_address" class="form-label">Address (WIP - need GOOGLE MAP API)</label>
-        <input type="text" class="form-control" id="event_address" name="event_address" required
+        <label for="user_address" class="form-label">Address (WIP - need GOOGLE MAP API)</label>
+        <input type="text" class="form-control" id="user_address" name="user_address" required
             placeholder="Enter event address">
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+
+    <body>
+        <div id="map"></div>
+    
+        <!-- 
+          The `defer` attribute causes the callback to execute after the full HTML
+          document has been parsed. For non-blocking uses, avoiding race conditions,
+          and consistent behavior across browsers, consider loading using Promises.
+          See https://developers.google.com/maps/documentation/javascript/load-maps-js-api
+          for more information.
+          -->
+        <script
+          src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDUNewuSDlRLem-I3kcBnvU6467VleNicM&callback=initMap&v=weekly"
+          defer
+        ></script>
+      </body>
+    </form>
 
 {% endblock %}
+

@@ -34,27 +34,45 @@ def get_event(event_id):
     event = event_repo.get_event_by_id(event_id)
     return render_template('get_single_event.html', event=event)
 
+#@app.get('/events/newmap')
+#def new_eventmap():
+    return render_template('googlemaps_input.html')
+
+#@app.post('/events')
+#def create_event_map():
+    user_address = request.form['address']
+    event_address = gmaps.geocode(user_address)
+
+    #if not event_address:
+     #   return 'Bad Request', 400
+    # More tests to be added
+    event_repo.create_event(event_address)
+    return redirect('/events/new')
+
 @app.get('/events/new')
 def new_event():
     return render_template('create_event.html')
 
-@app.post('/events')
+@app.post('/events/new')
 def create_event():
     host_id = request.form['host_id']
     event_name = request.form['event_name']
     event_description = request.form['event_description']
     start_time = request.form['start_time']
     end_time = request.form['end_time']
-    event_address = request.form['event_address']
-    if not host_id or not event_name or not event_description or not start_time or not end_time or not event_address:
-        return 'Bad Request', 400
+    user_address = request.form['user_address']
+    event_address = gmaps.geocode(user_address)
+    
+    #if not host_id or not event_name or not event_description or not start_time or not end_time:
+     #   return 'Bad Request', 400
     # More tests to be added
     
     event_repo.create_event(host_id, event_name, event_description, start_time, end_time, event_address)
     return redirect('/events')
 
-@app.post('/signup')
-def signup():
+
+#@app.post('/signup')
+#def signup():
     username = request.form.get('username')
     password = request.form.get('password')
     if not username or not password:
@@ -66,8 +84,8 @@ def signup():
     user_repository.create_user(username, hashed_password)
     return redirect('/')
 
-@app.post('/login')
-def login():
+#@app.post('/login')
+#def login():
     username = request.form.get('username')
     password = request.form.get('password')
     if not username or not password:
@@ -80,7 +98,7 @@ def login():
     session['user_id'] = user['user_id']
     return redirect('/listevents')
 
-@app.post('/logout')
-def logout():
+#@app.post('/logout')
+#def logout():
     del session['user_id']
     return redirect('/')
