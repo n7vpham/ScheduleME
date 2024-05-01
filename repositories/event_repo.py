@@ -55,3 +55,25 @@ def create_event(host_id: int, event_name: str, event_description: str, start_ti
             return res[0]
             
         
+def delete_event(event_id : int):
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cur:
+            cur.execute('''
+                        DELETE
+                            event_id,
+                            event_name, 
+                            event_description,
+                            start_time,
+                            end_time, 
+                            event_address
+                        FROM 
+                            events
+                        WHERE event_id = %s
+                        ;
+                        ''', [event_id])
+            res = cur.fetchone()
+            if res: 
+                raise Exception('Failed to delete event.')
+            return res[0]
+        

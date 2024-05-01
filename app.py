@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from flask_bcrypt import Bcrypt
 from datetime import datetime
 import os
-import googlemaps
+#import googlemaps
 from repositories import event_repo, user_repository
 
 load_dotenv()
@@ -14,7 +14,7 @@ bcrypt = Bcrypt(app)
 
 app.secret_key = os.getenv('APP_SECRET_KEY')
 
-gmaps = googlemaps.Client(key='AIzaSyDUNewuSDlRLem-I3kcBnvU6467VleNicM')
+#gmaps = googlemaps.Client(key='AIzaSyDUNewuSDlRLem-I3kcBnvU6467VleNicM')
 
 @app.get('/')
 def index():
@@ -91,3 +91,23 @@ def login():
 def logout():
     del session['user_id']
     return redirect('/')
+
+#edit events
+
+#edit individual event items
+@app.get('/events/<int:event_id>/edit')
+def get_edit_events_page(event_id: int):
+    event = event_repo.get_event_by_id(event_id)
+    return render_template('edit_event.html', event=event)
+
+#redirects to single event page for editing
+@app.post('/events/<int:event_id>')
+def update_event(event_id: int):
+    return redirect(f'/events/{event_id}')
+
+#delete whole event
+@app.post('/events/<int:event_id>/delete')
+def delete_event(event_id: int):
+    event_repo.delete_event(event_id)
+    print("Event has been deleted. Redirecting...")
+    return redirect(f'/events')

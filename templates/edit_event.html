@@ -1,0 +1,48 @@
+{% extends '_layout.html' %}
+
+{% block title %}Edit Event{% endblock %}
+
+{% block body %}
+
+<div class="col-12 text-center mt-3">
+    <h2>Edit Event</h2>
+</div>
+
+<form action="/events" method="POST">
+    <ul class="list0inline text-center" style="list-style-type:none;">
+        <li>Event ID: {{ event.event_id }}</li>
+        <li>Name: {{ event.event_name }}</li>
+        <input type="button" class="button" value="Edit" onclick="myGeeks(this)">
+        <li>Description: {{ event.event_description }}</li>
+        <input type="button" class="button" value="Edit" onclick="myGeeks(this)">
+        <li>Start Time: {{ event.start_time }}</li>         
+        <input type="button" class="button" value="Edit" onclick="myGeeks(this)">
+        <li>End Time: {{ event.end_time }}</li> 
+        <input type="button" class="button" value="Edit" onclick="myGeeks(this)">
+        <li>Address: {{ event.event_address }}</li> 
+        <input type="button" class="button" value="Edit" onclick="myGeeks(this)">
+    </ul>
+</form>
+
+<div id="inputContainer" style="display: none;">
+    <input type="text" id="userInput">
+    <button onclick="submitForm()">Submit</button>
+</div>
+
+<script>
+    function myGeeks(button) {
+        document.getElementById('inputContainer').style.display = 'block';
+        
+        var fieldValue = button.previousElementSibling.textContent.trim();
+        
+        document.getElementById('userInput').value = fieldValue;
+    }
+
+    function submitForm() {
+        var userInput = document.getElementById('userInput').value;
+        
+        document.getElementById('inputContainer').style.display = 'none';
+    }
+</script>
+
+{% endblock %}
