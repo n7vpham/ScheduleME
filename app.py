@@ -53,7 +53,9 @@ def get_event(event_id):
 def new_event():
     return render_template('create_event.html')
 
-@app.post('/events/new')
+
+
+@app.route('/events/new', methods=['GET', 'POST'])
 def create_event():
     host_id = request.form['host_id']
     event_name = request.form['event_name']
@@ -61,10 +63,13 @@ def create_event():
     start_time = request.form['start_time']
     end_time = request.form['end_time']
     user_address = request.form['user_address']
-    event_address = gmaps.geocode(user_address)
+    geocode_result = gmaps.geocode(user_address)
+    event_address = geocode_result[0]["geometry"]["location"]["lat"]
+    #test - print results
+    #lon = geocode_result[0]["geometry"]["location"]["lng"]
     
-    #if not host_id or not event_name or not event_description or not start_time or not end_time:
-     #   return 'Bad Request', 400
+    if not host_id or not event_name or not event_description or not start_time or not end_time:
+        return 'Bad Request', 400
     # More tests to be added
     
     event_repo.create_event(host_id, event_name, event_description, start_time, end_time, event_address)
