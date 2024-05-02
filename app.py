@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 bcrypt = Bcrypt(app)
 
-app.secret_key = os.getenv('USER_SECRETE_KEY')
+app.secret_key = os.getenv('APP_SECRET_KEY')
 
 
 #gmaps = googlemaps.Client(key='AIzaSyDUNewuSDlRLem-I3kcBnvU6467VleNicM')
