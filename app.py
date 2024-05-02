@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from flask_bcrypt import Bcrypt
 from datetime import datetime
 import os
-import googlemaps
+#import googlemaps
 from repositories import event_repo, user_repository
 
 load_dotenv()
@@ -12,9 +12,10 @@ app = Flask(__name__)
 
 bcrypt = Bcrypt(app)
 
-app.secret_key = os.getenv('APP_SECRET_KEY')
+app.secret_key = os.getenv('USER_SECRETE_KEY')
 
-gmaps = googlemaps.Client(key='AIzaSyDUNewuSDlRLem-I3kcBnvU6467VleNicM')
+
+#gmaps = googlemaps.Client(key='AIzaSyDUNewuSDlRLem-I3kcBnvU6467VleNicM')
 
 @app.get('/')
 def index():
@@ -40,18 +41,24 @@ def new_event():
 
 @app.post('/events')
 def create_event():
-    host_id = request.form['host_id']
+    #--testing user log in 
+    if 'user_email' not in session:
+        return redirect('/login')
+    #changing host_id = request.form['host_id'] to host_id = session['user_id']
+    host_id = session['user_email']
     event_name = request.form['event_name']
     event_description = request.form['event_description']
     start_time = request.form['start_time']
     end_time = request.form['end_time']
     event_address = request.form['event_address']
-    if not host_id or not event_name or not event_description or not start_time or not end_time or not event_address:
+    #removing host_id from the if statement
+    if event_name or not event_description or not start_time or not end_time or not event_address:
         return 'Bad Request', 400
     # More tests to be added
     
     event_repo.create_event(host_id, event_name, event_description, start_time, end_time, event_address)
-    return redirect('/events')
+    #return redirect('/events')
+    return "Event Created Successfully! ", 201
 
 @app.get('/users')
 def new_user():
@@ -72,22 +79,26 @@ def register():
     hashed_password = bcrypt.generate_password_hash(user_password).decode('utf-8')
     user_repository.create_user(user_fname, user_lname, user_email, hashed_password)
     return redirect('/users')
+
+@app.get('/login')
+def nav_login():
+    return render_template('login.html')
     
 @app.post('/login')
 def login():
-    username = request.form.get('username')
-    password = request.form.get('password')
-    if not username or not password:
+    user_email = request.form.get('user_email')
+    user_password = request.form.get('user_password')
+    if not user_email or not user_password:
         abort(400)
-    user = user_repository.get_user_by_username(username)
+    user = user_repository.get_user_by_user_email(user_email)
     if user is None:
         abort(401)
-    if not bcrypt.check_password_hash(user['hashed_password'], password):
+    if not bcrypt.check_password_hash(user['hashed_password'], user_password):
         abort(401)
-    session['user_id'] = user['user_id']
-    return redirect('/listevents')
+    session['user_email'] = user['user_email']
+    return render_template('create_event.html') 
 
 @app.post('/logout')
 def logout():
-    del session['user_id']
+    del session['user_email']
     return redirect('/')
