@@ -3,7 +3,7 @@ from repositories.db import get_pool
 from psycopg.rows import dict_row
 
 
-def does_username_exist(username: str) -> bool:
+def does_user_email_exist(user_email: str) -> bool:
     pool = get_pool()
     with pool.connection() as conn:
         with conn.cursor() as cur:
@@ -11,49 +11,32 @@ def does_username_exist(username: str) -> bool:
                         SELECT
                             user_id
                         FROM
-                            app_user
-                        WHERE username = %s
-                        ''', [username])
+                            users
+                        WHERE user_email = %s
+                        ''', [user_email])
             user_id = cur.fetchone()
+            print(user_id)
             return user_id is not None
-
-
-def create_user(username: str, password: str) -> dict[str, Any]:
-    pool = get_pool()
-    with pool.connection() as conn:
-        with conn.cursor() as cur:
-            cur.execute('''
-                        INSERT INTO app_user (username, password)
-                        VALUES (%s, %s)
-                        RETURNING user_id
-                        ''', [username, password]
-                        )
-            user_id = cur.fetchone()
-            if user_id is None:
-                raise Exception('failed to create user')
-            return {
-                'user_id': user_id,
-                'username': username
-            }
-
-
-def get_user_by_username(username: str) -> dict[str, Any] | None:
+        
+def get_user_by_user_email(user_email: str) -> dict[str, Any] | None:
     pool = get_pool()
     with pool.connection() as conn:
         with conn.cursor(row_factory=dict_row) as cur:
             cur.execute('''
                         SELECT
-                            user_id,
-                            username,
-                            password AS hashed_password
+                            user_email,
+                            user_password AS hashed_password
                         FROM
-                            app_user
-                        WHERE username = %s
-                        ''', [username])
+                            users
+                        WHERE user_email = %s
+                        ''', [user_email])
             user = cur.fetchone()
-            return user
+            if user is None:
+                raise Exception('User not found')
+            return user        
 
 
+#Extras to clean up 05/01/2024
 def get_user_by_id(user_id: int) -> dict[str, Any] | None:
     pool = get_pool()
     with pool.connection() as conn:
@@ -68,3 +51,24 @@ def get_user_by_id(user_id: int) -> dict[str, Any] | None:
                         ''', [user_id])
             user = cur.fetchone()
             return user
+        
+
+def create_user(user_fname: str,user_lname: str,user_email: str, user_password: str) -> dict[str, Any]:
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute('''
+                        INSERT INTO users (user_fname, user_lname, user_email, user_password)
+                        VALUES (%s, %s, %s, %s)
+                        RETURNING user_id
+                        ''', [user_fname, user_lname, user_email, user_password]
+                        )
+            user_id = cur.fetchone()
+            
+            if user_id is None:
+                raise Exception('failed to create user')
+            
+            return {
+                'user_id': user_id,
+                'user_email': user_email
+            }
