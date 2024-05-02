@@ -17,7 +17,41 @@ def does_user_email_exist(user_email: str) -> bool:
             user_id = cur.fetchone()
             print(user_id)
             return user_id is not None
+        
+def get_user_by_user_email(user_email: str) -> dict[str, Any] | None:
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cur:
+            cur.execute('''
+                        SELECT
+                            user_email,
+                            user_password AS hashed_password
+                        FROM
+                            users
+                        WHERE user_email = %s
+                        ''', [user_email])
+            user = cur.fetchone()
+            if user is None:
+                raise Exception('User not found')
+            return user        
 
+
+#Extras to clean up 05/01/2024
+def get_user_by_id(user_id: int) -> dict[str, Any] | None:
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cur:
+            cur.execute('''
+                        SELECT
+                            user_id,
+                            username
+                        FROM
+                            app_user
+                        WHERE user_id = %s
+                        ''', [user_id])
+            user = cur.fetchone()
+            return user
+        
 
 def create_user(user_fname: str,user_lname: str,user_email: str, user_password: str) -> dict[str, Any]:
     pool = get_pool()
@@ -38,36 +72,3 @@ def create_user(user_fname: str,user_lname: str,user_email: str, user_password: 
                 'user_id': user_id,
                 'user_email': user_email
             }
-
-
-def get_user_by_username(username: str) -> dict[str, Any] | None:
-    pool = get_pool()
-    with pool.connection() as conn:
-        with conn.cursor(row_factory=dict_row) as cur:
-            cur.execute('''
-                        SELECT
-                            user_id,
-                            username,
-                            password AS hashed_password
-                        FROM
-                            app_user
-                        WHERE username = %s
-                        ''', [username])
-            user = cur.fetchone()
-            return user
-
-
-def get_user_by_id(user_id: int) -> dict[str, Any] | None:
-    pool = get_pool()
-    with pool.connection() as conn:
-        with conn.cursor(row_factory=dict_row) as cur:
-            cur.execute('''
-                        SELECT
-                            user_id,
-                            username
-                        FROM
-                            app_user
-                        WHERE user_id = %s
-                        ''', [user_id])
-            user = cur.fetchone()
-            return user
