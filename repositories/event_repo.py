@@ -92,11 +92,8 @@ def update_eventName(event_id:int, event_name: str):
                             event_id = %s
                         ;
                         ''', [event_id, event_name])
-
             return None
-            if not res:
-                raise Exception('Failed to update event')
-            return res[0]
+
 
 #update event description
 def update_eventDescription(event_id:int, event_description: str):
@@ -113,9 +110,7 @@ def update_eventDescription(event_id:int, event_description: str):
                         ;
                         ''', [event_id, event_description])
             return None
-            if not res:
-                raise Exception('Failed to update event')
-            return res[0]
+
 
 #update event start time
 def update_eventStartTime(event_id:int, start_time: str):
@@ -132,9 +127,7 @@ def update_eventStartTime(event_id:int, start_time: str):
                         ;
                         ''', [event_id, start_time])
             return None
-            if not res:
-                raise Exception('Failed to update event')
-            return res[0]
+
 
 #update event end time
 def update_eventEndTime(event_id:int, end_time: str):
