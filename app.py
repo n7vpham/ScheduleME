@@ -3,7 +3,6 @@ from dotenv import load_dotenv
 from flask_bcrypt import Bcrypt
 from datetime import datetime
 import os
-#import googlemaps
 from repositories import event_repo, user_repository
 
 load_dotenv()
@@ -14,7 +13,6 @@ bcrypt = Bcrypt(app)
 
 app.secret_key = os.getenv('APP_SECRET_KEY')
 
-#gmaps = googlemaps.Client(key='AIzaSyDUNewuSDlRLem-I3kcBnvU6467VleNicM')
 
 @app.get('/')
 def index():
