@@ -1,11 +1,11 @@
 {% extends '_layout.html' %}
 
-{% block title %}Event List{% endblock %}
+{% block title %}User Event List{% endblock %}
 
 {% block body %}
 
 <div class="text-center mt-3">
-    <h2>Event List</h2>
+    <h2>User Event List</h2>
 </div>
 <table class="table table-striped">
     <thead>
@@ -20,7 +20,7 @@
     <tbody>
         {% for event in events %}
         <tr>
-            <td><a href="/events/{{ event.event_id }}">{{ event.event_id }}</a></td>
+            <td><a href="#">{{ event.event_id }}</a></td>
             <td>{{ event.event_name }}</td>
             <td>{{ event.start_time }}</td>
             <td>{{ event.end_time }}</td>

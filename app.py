@@ -20,7 +20,7 @@ gmaps = googlemaps.Client(key='AIzaSyDUNewuSDlRLem-I3kcBnvU6467VleNicM')
 @app.get('/')
 def index():
     if 'user_id' in session:
-        return redirect('/listevents')
+        return redirect('/events')
     else:
         return render_template('index.html')
 
@@ -38,36 +38,40 @@ def get_event(event_id):
 
 @app.get('/events/new')
 def new_event():
-    return render_template('create_event.html')
-
-
+    if 'user_id' in session:
+        return render_template('create_event.html')
+    else:
+        return render_template('index.html')
 
 @app.post('/events')
 def create_event():
-    host_id = request.form['host_id']
-    event_name = request.form['event_name']
-    event_description = request.form['event_description']
-    start_time = request.form['start_time']
-    end_time = request.form['end_time']
-    user_address = request.form['user_address']
-    geocode_result = gmaps.geocode(user_address)
-    event_address_pre = geocode_result[0]["place_id"]
+    if 'user_id' in session:
+        host_id = session['user_id']
+        event_name = request.form['event_name']
+        event_description = request.form['event_description']
+        start_time = request.form['start_time']
+        end_time = request.form['end_time']
+        user_address = request.form['user_address']
+        geocode_result = gmaps.geocode(user_address)
+        event_address_pre = geocode_result[0]["place_id"]
 
-    rev_geocode_result = gmaps.reverse_geocode(event_address_pre)
-    event_address = rev_geocode_result[0]["formatted_address"]
-    
-    if not host_id or not event_name or not event_description or not start_time or not end_time:
-        return 'Bad Request', 400
-    # More tests to be added
-    
-    event_repo.create_event(host_id, event_name, event_description, start_time, end_time, event_address)
-    return redirect('/events')
+        rev_geocode_result = gmaps.reverse_geocode(event_address_pre)
+        event_address = rev_geocode_result[0]["formatted_address"]
+        
+        if not host_id or not event_name or not event_description or not start_time or not end_time:
+            return 'Bad Request', 400
+        # More tests to be added
+        
+        event_repo.create_event(host_id, event_name, event_description, start_time, end_time, event_address)
+        return redirect('/events')
+    else:
+        return render_template('index.html')
 
-@app.get('/users')
+@app.get('/users') # /secret, render secret.html in video
 def new_user():
     return render_template('user_registration.html')
 
-@app.post('/users')
+@app.post('/users') # /signup, redirect to secret in video
 def register():
     user_fname = request.form['user_fname']
     user_lname = request.form['user_lname']
@@ -81,7 +85,7 @@ def register():
         return redirect('/')
     hashed_password = bcrypt.generate_password_hash(user_password).decode('utf-8')
     user_repository.create_user(user_fname, user_lname, user_email, hashed_password)
-    return redirect('/users')
+    return redirect('/login')
 
 @app.get('/login')
 def nav_login():
@@ -98,12 +102,12 @@ def login():
         abort(401)
     if not bcrypt.check_password_hash(user['hashed_password'], user_password):
         abort(401)
-    session['user_email'] = user['user_email']
-    return render_template('create_event.html') 
+    session['user_id'] = user['user_id']
+    return redirect('/profile')
 
 @app.post('/logout')
 def logout():
-    del session['user_email']
+    del session['user_id']
     return redirect('/')
 
 #edit events
@@ -155,3 +159,20 @@ def delete_event(event_id: int):
     event_repo.delete_event(event_id)
     print("Event has been deleted. Redirecting...")
     return redirect(f'/events')
+
+#Nam nam nam
+@app.get('/profile')
+def get_user():
+    if 'user_id' in session:
+        user = user_repository.get_user_by_id(session['user_id'])
+        return render_template('get_single_user.html', user=user)        
+    else:
+        return render_template('index.html')  
+
+@app.get('/profile/events')
+def list_all_user_events():
+    if 'user_id' in session:
+        all_events = event_repo.get_all_events_by_user_id(session['user_id'])
+        return render_template('list_all_user_events.html', events=all_events)
+    else:
+        return render_template('index.html')

@@ -1,0 +1,39 @@
+{% extends '_layout.html' %}
+
+{% block title %}User Details{% endblock %}
+
+{% block body %}
+
+<style>
+    iframe {
+        display: block;
+        border-style: none;
+        margin: 0 auto;
+    }
+</style>
+
+
+<div class="col-12 text-center mt-3">
+    <h2>Control Panel</h2>
+</div>
+
+<ul class="list0inline text-center" style="list-style-type:none;">
+    <li>User ID: {{ user.user_id }}</li>
+    <li>First Name: {{ user.user_fname }}</li>
+    <li>Last Name: {{ user.user_lname }}</li>
+    <li>Email: {{ user.user_email }}</li>
+    <li>Password: [protected]</li>
+    <li>User Since: {{ user.user_since }}</li>
+</ul>
+<div style="display: flex; justify-content:space-around">
+    <form action="/profile/events" method="get">
+        <button type="submit" class="btn btn-danger">Edit Events</button>
+    </form>
+    <form action="/logout" method="get">
+        <button type="submit" class="btn btn-danger">Edit Profile</button>
+    </form>
+    <form action="/logout" method="post">
+        <button type="submit" class="btn btn-danger">Logout</button>
+    </form>
+</div>
+{% endblock %}
