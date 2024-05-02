@@ -174,3 +174,20 @@ def update_eventAddress(event_id:int, event_address: str):
                 raise Exception('Failed to update event')
             return res[0]
 
+def get_all_events_by_user_id(user_id:int):
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cur:
+            cur.execute('''
+                        SELECT
+                            event_id,
+                            event_name, 
+                            start_time,
+                            end_time, 
+                            event_address
+                        FROM 
+                            events
+                        WHERE host_id = %s
+                        ;
+                        ''', [user_id])
+            return cur.fetchall()
