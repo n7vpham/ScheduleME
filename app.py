@@ -20,7 +20,7 @@ gmaps = googlemaps.Client(key='AIzaSyDUNewuSDlRLem-I3kcBnvU6467VleNicM')
 @app.get('/')
 def index():
     if 'user_id' in session:
-        return redirect('/events')
+        return render_template('logged_index.html')
     else:
         return render_template('index.html')
 
