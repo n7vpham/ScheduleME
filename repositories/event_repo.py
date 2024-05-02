@@ -151,9 +151,7 @@ def update_eventEndTime(event_id:int, end_time: str):
                         ;
                         ''', [event_id, end_time])
             return None
-            if not res:
-                raise Exception('Failed to update event')
-            return res[0]
+
 
 #update event address
 def update_eventAddress(event_id:int, event_address: str):
@@ -170,9 +168,7 @@ def update_eventAddress(event_id:int, event_address: str):
                         ;
                         ''', [event_id, event_address])
             return None
-            if not res:
-                raise Exception('Failed to update event')
-            return res[0]
+
 
 def get_all_events_by_user_id(user_id:int):
     pool = get_pool()
