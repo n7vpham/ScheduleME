@@ -24,6 +24,7 @@ def get_user_by_user_email(user_email: str) -> dict[str, Any] | None:
         with conn.cursor(row_factory=dict_row) as cur:
             cur.execute('''
                         SELECT
+                            user_id,
                             user_email,
                             user_password AS hashed_password
                         FROM
@@ -36,7 +37,6 @@ def get_user_by_user_email(user_email: str) -> dict[str, Any] | None:
             return user        
 
 
-#Extras to clean up 05/01/2024
 def get_user_by_id(user_id: int) -> dict[str, Any] | None:
     pool = get_pool()
     with pool.connection() as conn:
@@ -44,13 +44,15 @@ def get_user_by_id(user_id: int) -> dict[str, Any] | None:
             cur.execute('''
                         SELECT
                             user_id,
-                            username
+                            user_fname,
+                            user_lname,
+                            user_email,
+                            user_since
                         FROM
-                            app_user
+                            users
                         WHERE user_id = %s
                         ''', [user_id])
-            user = cur.fetchone()
-            return user
+            return cur.fetchone()
         
 
 def create_user(user_fname: str,user_lname: str,user_email: str, user_password: str) -> dict[str, Any]:
