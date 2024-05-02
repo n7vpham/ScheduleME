@@ -72,6 +72,7 @@ def delete_event(event_id : int):
                         WHERE event_id = %s
                         ;
                         ''', [event_id])
+            return None; 
             res = cur.fetchone()
             if res: 
                 raise Exception('Failed to delete event.')

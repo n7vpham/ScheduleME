@@ -7,6 +7,7 @@
 <div class="text-center mt-3">
     <h2>User Event List</h2>
 </div>
+
 <table class="table table-striped">
     <thead>
         <tr>
@@ -25,6 +26,18 @@
             <td>{{ event.start_time }}</td>
             <td>{{ event.end_time }}</td>
             <td>{{ event.event_address }}</td>
+
+            <form id="editSingleEventForm" action="/events/{{ event.event_id }}/edit" method="GET">
+
+                <td>    <button type="submit" class="button">Edit event</button>
+                </td>
+            </form>
+            <form id="editSingleEventForm" action="/events/{{event.event_id}}/delete" method="GET">
+
+                <td>    <button type="submit" class="button">Delete</button>
+                </td>
+            </form>
+
         </tr>
         {% endfor %}
     </tbody>

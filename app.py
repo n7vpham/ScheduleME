@@ -154,11 +154,14 @@ def update_event(event_id: int):
 
 
 #delete whole event
-@app.post('/events/<int:event_id>/delete')
+@app.get('/events/<int:event_id>/delete')
 def delete_event(event_id: int):
+    event = event_repo.get_event_by_id(event_id)
+    if not event:
+        return 'Event not found', 404
     event_repo.delete_event(event_id)
     print("Event has been deleted. Redirecting...")
-    return redirect(f'/events')
+    return redirect('/profile/events')
 
 #Nam nam nam
 @app.get('/profile')
@@ -176,3 +179,4 @@ def list_all_user_events():
         return render_template('list_all_user_events.html', events=all_events)
     else:
         return render_template('index.html')
+
