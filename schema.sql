@@ -25,16 +25,11 @@ alter table events rename  column title to event_name;
 alter table events rename  column description to event_description;
 alter table events rename  column address to event_address;
 
-
--- Add more if you want(For testing purposes)
-Insert into users (user_fname, user_lname, user_email, user_password) values ('John', 'Doe', 'johndoe@gmail.com', 'password'); 
-Insert into users (user_fname, user_lname, user_email, user_password) values ('Jane', 'Doe', 'janedoe@gmail.com', 'password1'); 
-
 Insert into events (host_id, event_name, event_description, start_time, end_time, event_address) values (1, 'TOWNHALL MEETING', 'Come celebrate my birthday', '2021-12-12 12:00:00.436454', '2021-12-12 15:00:00.436454', '1234 Elm St');    
 Insert into events (host_id, event_name, event_description, start_time, end_time, event_address) values (2, 'CAREER FAIR', 'UNCC CS Major career fair fo the semester', '2021-12-12 12:00:00.464515', '2021-12-12 15:00:00.464515', '1234 Elm St');
 
 
--- EXPERIMENTAL
+-- EXPERIMENTAL (DO NOT RUN THOSE BELOW!!!! DO NOT I REPEAT DO NOT RUN THEM!!!!!)
 CREATE TABLE IF NOT EXISTS comment (
     comment_id          SERIAL,
     content             VARCHAR(255)   NOT NULL,
