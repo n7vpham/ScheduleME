@@ -96,12 +96,42 @@ def logout():
 @app.get('/events/<int:event_id>/edit')
 def get_edit_events_page(event_id: int):
     event = event_repo.get_event_by_id(event_id)
+    if not event:
+        return 'Event not found', 404
+    
+    # Fetch event details from the database
+    event_name = event['event_name']
+    event_description = event['event_description']
+    start_time = event['start_time']
+    end_time = event['end_time']
+    event_address = event['event_address']
+    
     return render_template('edit_event.html', event=event)
 
 #redirects to single event page for editing
 @app.post('/events/<int:event_id>')
 def update_event(event_id: int):
+    event = event_repo.get_event_by_id(event_id)
+    if not event:
+        return 'Event not found', 404
+
+    # Fetch updated event details from the form
+    event_name = request.form['event_name']
+    event_description = request.form['event_description']
+    start_time = request.form['start_time']
+    end_time = request.form['end_time']
+    event_address = request.form['event_address']
+    
+    # Update the event in the database
+    event_repo.update_eventName(event_name, event_id)
+    event_repo.update_eventDescription(event_description, event_id)
+    event_repo.update_eventStartTime(start_time, event_id)
+    event_repo.update_eventEndTime(end_time, event_id)
+    event_repo.update_eventAddress(event_address, event_id)
+
+    # Redirect to the event details page
     return redirect(f'/events/{event_id}')
+
 
 #delete whole event
 @app.post('/events/<int:event_id>/delete')
