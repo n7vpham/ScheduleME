@@ -47,7 +47,7 @@
                 <button type="button" class="button" onclick="enableEdit('start_time')">Edit</button>
             </span>
             <div id="start_timeEdit" style="display: none;">
-                <input type="text" id="start_time" name="start_time">
+                <input type="datetime-local" id="start_time" name="start_time">
                 <button type="button" class="button" onclick="submitForm('start_time')">Submit</button>
             </div>
         </li>
@@ -59,7 +59,7 @@
                 <button type="button" class="button" onclick="enableEdit('end_time')">Edit</button>
             </span>
             <div id="end_timeEdit" style="display: none;">
-                <input type="text" id="end_time" name="end_time">
+                <input type="datetime-local" id="end_time" name="end_time">
                 <button type="button" class="button" onclick="submitForm('end_time')">Submit</button>
             </div>
         </li>
@@ -89,7 +89,7 @@
         editSection.style.display = "block";
         var inputField = editSection.querySelector("input");
         inputField.value = container.firstChild.textContent.trim();
-        inputField.focus(); // Optionally, focus the input field for better usability
+        inputField.focus(); 
     }
 
 function submitForm(fieldName) {
@@ -99,9 +99,8 @@ function submitForm(fieldName) {
     container.style.display = "inline";
     editSection.style.display = "none";
     var span = container.firstChild;
-    span.textContent = inputField.value; // Replace existing content with new input value
-    document.getElementById(fieldName + "Container").style.display = "hidden";
-    container.style.display = "block";
+    span.textContent = inputField.value; 
+
 }
 
 </script>
