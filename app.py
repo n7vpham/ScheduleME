@@ -153,7 +153,7 @@ def update_event(event_id: int):
 
 
 #delete whole event
-@app.get('/events/<int:event_id>/delete')
+@app.post('/events/<int:event_id>/delete')
 def delete_event(event_id: int):
     event = event_repo.get_event_by_id(event_id)
     if not event:
