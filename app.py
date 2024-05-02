@@ -3,19 +3,19 @@ from dotenv import load_dotenv
 from flask_bcrypt import Bcrypt
 from datetime import datetime
 import os
-#import googlemaps
+import googlemaps
 from repositories import event_repo, user_repository
 
 load_dotenv()
 
 app = Flask(__name__)
 
-bcrypt = Bcrypt(app)
+bcrypt = Bcrypt(app) 
 
-app.secret_key = os.getenv('USER_SECRETE_KEY')
+app.secret_key = os.getenv('APP_SECRET_KEY')
 
+gmaps = googlemaps.Client(key='AIzaSyDUNewuSDlRLem-I3kcBnvU6467VleNicM')
 
-#gmaps = googlemaps.Client(key='AIzaSyDUNewuSDlRLem-I3kcBnvU6467VleNicM')
 
 @app.get('/')
 def index():
@@ -27,8 +27,9 @@ def index():
 
 @app.get('/events')
 def list_all_events():
+    # TODO: Feature 1
     all_events = event_repo.get_all_events_for_table()
-    return render_template('list_all_events.html', events=all_events)
+    return render_template('list_all_events.html', events=all_events )
 
 @app.get('/events/<int:event_id>')
 def get_event(event_id):
@@ -39,26 +40,28 @@ def get_event(event_id):
 def new_event():
     return render_template('create_event.html')
 
+
+
 @app.post('/events')
 def create_event():
-    #--testing user log in 
-    if 'user_email' not in session:
-        return redirect('/login')
-    #changing host_id = request.form['host_id'] to host_id = session['user_id']
-    host_id = session['user_email']
+    host_id = request.form['host_id']
     event_name = request.form['event_name']
     event_description = request.form['event_description']
     start_time = request.form['start_time']
     end_time = request.form['end_time']
-    event_address = request.form['event_address']
-    #removing host_id from the if statement
-    if event_name or not event_description or not start_time or not end_time or not event_address:
+    user_address = request.form['user_address']
+    geocode_result = gmaps.geocode(user_address)
+    event_address_pre = geocode_result[0]["place_id"]
+
+    rev_geocode_result = gmaps.reverse_geocode(event_address_pre)
+    event_address = rev_geocode_result[0]["formatted_address"]
+    
+    if not host_id or not event_name or not event_description or not start_time or not end_time:
         return 'Bad Request', 400
     # More tests to be added
     
     event_repo.create_event(host_id, event_name, event_description, start_time, end_time, event_address)
-    #return redirect('/events')
-    return "Event Created Successfully! ", 201
+    return redirect('/events')
 
 @app.get('/users')
 def new_user():

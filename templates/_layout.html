@@ -8,11 +8,16 @@
 
     <title>ScheduleME || {% block title %}{% endblock %}</title>
     <style>
-        body{
-        font-family: Gill sans, Montserrat;
-        margin: 0;
-        padding: 0;
+    body {
+        background-color: azure;
     }
+            
+            /* Modify the background color */
+    .navbar-custom {
+        background-color: skyblue;
+    }
+        
+
     /* header style */
     header {
         background-color: #41aea9;
@@ -25,7 +30,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        min-height: 5vh; /* Adjusted height */
+        min-height: 1vh; /* Adjusted height */
     }
     /* content style */
     .content {
@@ -57,9 +62,9 @@
     .footer {
         background-color: #34495e;
             color: #fff;
-            padding: 20px;
+            padding: 10px;
             text-align: center;
-            position: fixed;
+            margin-top: auto;
             bottom: 0;
             width: 100%;
     }
@@ -81,7 +86,10 @@
     <header>
         <nav class="navbar navbar-expand-lg bg-body-tertiary"> 
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">ScheduleME</a>
+                <a class="navbar-brand" href="#"><span style="font-family: cursive">ScheduleME
+                    
+                </span></a>
+                <img src="https://cdn-icons-png.flaticon.com/512/235/235861.png" alt="..." height="36">
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
