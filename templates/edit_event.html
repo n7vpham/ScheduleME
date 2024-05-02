@@ -1,0 +1,110 @@
+{% extends '_layout.html' %}
+
+{% block title %}Edit Event{% endblock %}
+
+{% block body %}
+
+
+<div class="col-12 text-center mt-3">
+    <h2>Edit Event</h2>
+</div>
+
+<div class="col-12 text-center mt-3">
+    <p><strong>Event ID:</strong> {{ event.event_id }}</p>
+</div>
+
+<form id="editEventForm" action="/events/{{ event.event_id }}" method="POST">
+    <ul class="list-inline text-center" style="list-style-type:none;">
+        <!--name-->
+        <li>
+            <label for="event_name" class="form-label">Name:</label>
+            <span id="event_nameContainer">
+                <span>{{ event.event_name }}</span>
+                <button type="button" class="button" onclick="enableEdit('event_name')">Edit</button>
+            </span>
+            <div id="event_nameEdit" style="display: none;">
+                <input type="text" id="event_name" name="event_name">
+                <button type="button" class="button" onclick="submitForm('event_name')">Submit</button>
+            </div>
+        </li>
+        <!--description-->
+        <li>
+            <label for="event_description" class="form-label">Description:</label>
+            <span id="event_descriptionContainer">
+                <span>{{ event.event_description }}</span>
+                <button type="button" class="button" onclick="enableEdit('event_description')">Edit</button>
+            </span>
+            <div id="event_descriptionEdit" style="display: none;">
+                <input type="text" id="event_description" name="event_description">
+                <button type="button" class="button" onclick="submitForm('event_description')">Submit</button>
+            </div>
+        </li>
+        <!--start time-->
+        <li>
+            <label for="start_time" class="form-label">Start time:</label>
+            <span id="start_timeContainer">
+                <span>{{ event.start_time }}</span>
+                <button type="button" class="button" onclick="enableEdit('start_time')">Edit</button>
+            </span>
+            <div id="start_timeEdit" style="display: none;">
+                <input type="text" id="start_time" name="start_time">
+                <button type="button" class="button" onclick="submitForm('start_time')">Submit</button>
+            </div>
+        </li>
+        <!--end time-->
+        <li>
+            <label for="end_time" class="form-label">End time:</label>
+            <span id="end_timeContainer">
+                <span>{{ event.end_time }}</span>
+                <button type="button" class="button" onclick="enableEdit('end_time')">Edit</button>
+            </span>
+            <div id="end_timeEdit" style="display: none;">
+                <input type="text" id="end_time" name="end_time">
+                <button type="button" class="button" onclick="submitForm('end_time')">Submit</button>
+            </div>
+        </li>
+        <!--address-->
+        <li>
+            <label for="event_address" class="form-label">Address:</label>
+            <span id="event_addressContainer">
+                <span>{{ event.event_address }}</span>
+                <button type="button" class="button" onclick="enableEdit('event_address')">Edit</button>
+            </span>
+            <div id="event_addressEdit" style="display: none;">
+                <input type="text" id="event_address" name="event_address">
+                <button type="button" class="button" onclick="submitForm('event_address')">Submit</button>
+            </div>
+        </li>
+
+    </ul>
+    <button type="submit" class="button">Save Changes</button>
+
+    </form>
+
+<script>
+    function enableEdit(fieldName) {
+        var container = document.getElementById(fieldName + "Container");
+        var editSection = document.getElementById(fieldName + "Edit");
+        container.style.display = "none";
+        editSection.style.display = "block";
+        var inputField = editSection.querySelector("input");
+        inputField.value = container.firstChild.textContent.trim();
+        inputField.focus(); // Optionally, focus the input field for better usability
+    }
+
+function submitForm(fieldName) {
+    var container = document.getElementById(fieldName + "Container");
+    var editSection = document.getElementById(fieldName + "Edit");
+    var inputField = editSection.querySelector("input");
+    container.style.display = "inline";
+    editSection.style.display = "none";
+    var span = container.firstChild;
+    span.textContent = inputField.value; // Replace existing content with new input value
+    document.getElementById(fieldName + "Container").style.display = "hidden";
+    container.style.display = "block";
+}
+
+</script>
+
+
+{% endblock %}
