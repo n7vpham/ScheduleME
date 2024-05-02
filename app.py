@@ -85,7 +85,7 @@ def register():
         return redirect('/')
     hashed_password = bcrypt.generate_password_hash(user_password).decode('utf-8')
     user_repository.create_user(user_fname, user_lname, user_email, hashed_password)
-    return redirect('/users')
+    return redirect('/login')
 
 @app.get('/login')
 def nav_login():
