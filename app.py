@@ -1,7 +1,6 @@
 from flask import Flask, abort, redirect, render_template, request, session
 from dotenv import load_dotenv
 from flask_bcrypt import Bcrypt
-from datetime import datetime
 import os
 import googlemaps
 from repositories import event_repo, user_repository
