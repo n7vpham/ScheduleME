@@ -4,21 +4,22 @@
 
 {% block body %}
 <style>
-    body {
-      background-color: azure;
-    }
-    
-    h2 {
-      color: black;
-      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-      text-align: center;
-    }
-    </style>
 
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 20vh; 
+    }
+</style>
 <div class="row">
     <div class="col-12 text-center mt-3">
         <h2>Welcome to ScheduleME</h2>
-        <p>Here you can schedule your events and share them with your friends.</p>
+        <p>The app that makes scheduling and finding an Event a breeze! Here, you can schedule your events and share them with your friends.</p>
+        <a href="/login" class="btn">Log In</a>
+
+                <p>Just visiting? Check out our events or <a href="/users">Register</a> to create one.</p>
+
     </div>
 </div>
 

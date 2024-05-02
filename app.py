@@ -3,17 +3,19 @@ from dotenv import load_dotenv
 from flask_bcrypt import Bcrypt
 from datetime import datetime
 import os
-import googlemaps
+#import googlemaps
 from repositories import event_repo, user_repository
 
 load_dotenv()
 
 app = Flask(__name__)
 
-app.secret_key = os.getenv('APP_SECRET_KEY')
+bcrypt = Bcrypt(app)
 
-gmaps = googlemaps.Client(key='AIzaSyDUNewuSDlRLem-I3kcBnvU6467VleNicM')
+app.secret_key = os.getenv('USER_SECRETE_KEY')
 
+
+#gmaps = googlemaps.Client(key='AIzaSyDUNewuSDlRLem-I3kcBnvU6467VleNicM')
 
 @app.get('/')
 def index():
@@ -25,7 +27,6 @@ def index():
 
 @app.get('/events')
 def list_all_events():
-    # TODO: Feature 1
     all_events = event_repo.get_all_events_for_table()
     return render_template('list_all_events.html', events=all_events )
 
@@ -46,7 +47,11 @@ def new_event():
 
 @app.post('/events')
 def create_event():
-    host_id = request.form['host_id']
+    #--testing user log in 
+    if 'user_email' not in session:
+        return redirect('/login')
+    #changing host_id = request.form['host_id'] to host_id = session['user_id']
+    host_id = session['user_email']
     event_name = request.form['event_name']
     event_description = request.form['event_description']
     start_time = request.form['start_time']
@@ -62,41 +67,72 @@ def create_event():
     #lon = geocode_result[0]["geometry"]["location"]["lng"]
     
     if not host_id or not event_name or not event_description or not start_time or not end_time:
+
         return 'Bad Request', 400
     # More tests to be added
     
     event_repo.create_event(host_id, event_name, event_description, start_time, end_time, event_address)
-    return redirect('/events')
+    #return redirect('/events')
+    return "Event Created Successfully! ", 201
 
 
-#@app.post('/signup')
-#def signup():
-    username = request.form.get('username')
-    password = request.form.get('password')
-    if not username or not password:
-        abort(400)
-    does_user_exist = user_repository.does_username_exist(username)
-    if does_user_exist:
-        abort(400)
-    hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-    user_repository.create_user(username, hashed_password)
-    return redirect('/')
+@app.get('/users')
+def new_user():
+    return render_template('user_registration.html')
 
-#@app.post('/login')
-#def login():
-    username = request.form.get('username')
-    password = request.form.get('password')
-    if not username or not password:
+@app.post('/users')
+def register():
+    user_fname = request.form['user_fname']
+    user_lname = request.form['user_lname']
+    user_email = request.form['user_email']
+    user_password = request.form['user_password']
+    if not user_fname or not user_lname or not user_email or not user_password:
         abort(400)
-    user = user_repository.get_user_by_username(username)
+    does_user_email_exist = user_repository.does_user_email_exist(user_email)
+    
+    if  does_user_email_exist:
+        return redirect('/')
+    hashed_password = bcrypt.generate_password_hash(user_password).decode('utf-8')
+    user_repository.create_user(user_fname, user_lname, user_email, hashed_password)
+    return redirect('/users')
+
+
+@app.get('/login')
+def nav_login():
+    return render_template('login.html')
+    
+@app.post('/login')
+def login():
+    user_email = request.form.get('user_email')
+    user_password = request.form.get('user_password')
+    if not user_email or not user_password:
+        abort(400)
+    user = user_repository.get_user_by_user_email(user_email)
     if user is None:
         abort(401)
-    if not bcrypt.check_password_hash(user['hashed_password'], password):
+    if not bcrypt.check_password_hash(user['hashed_password'], user_password):
         abort(401)
-    session['user_id'] = user['user_id']
-    return redirect('/listevents')
+    session['user_email'] = user['user_email']
+    return render_template('create_event.html') 
 
-#@app.post('/logout')
-#def logout():
-    del session['user_id']
+
+@app.post('/logout')
+def logout():
+    del session['user_email']
     return redirect('/')
+
+#edit events
+
+@app.get('/events/<int:event_id>/edit')
+def get_edit_events_page(event_id: int):
+    return render_template('edit_event.html')
+
+
+@app.post('/events/<int:event_id>')
+def update_event(event_id: int):
+    return redirect(f'/events/{event_id}')
+
+
+@app.post('/events/<int:event_id>/delete')
+def delete_event(event_id: int):
+    return redirect(f'/events')
