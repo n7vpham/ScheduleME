@@ -1,5 +1,8 @@
 from repositories.db import get_pool
 from psycopg.rows import dict_row
+import googlemaps
+
+gmaps = googlemaps.Client(key='AIzaSyDUNewuSDlRLem-I3kcBnvU6467VleNicM')
 
 def get_all_events_for_table():
     pool = get_pool()
@@ -17,6 +20,21 @@ def get_all_events_for_table():
                         ;
                         ''')
             return cur.fetchall()
+        
+def get_event_address_for_table():
+    pool = get_pool()
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cur:
+            cur.execute('''
+                        SELECT
+                            event_address
+                        FROM 
+                            events
+                        ;
+                        ''')
+            
+            event_addressdb = cur.fetchone()
+            return event_addressdb
         
 def get_event_by_id(event_id : int):
     pool = get_pool()

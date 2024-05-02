@@ -27,7 +27,10 @@ def index():
 def list_all_events():
     # TODO: Feature 1
     all_events = event_repo.get_all_events_for_table()
-    return render_template('list_all_events.html', events=all_events)
+    eventdata = event_repo.get_event_address_for_table('event_address')
+    geocode_result2 = gmaps.reverse_geocode(eventdata)
+    event_address2 = geocode_result2[0]["formatted_address"]
+    return render_template('list_all_events.html', events=all_events )
 
 @app.get('/events/<int:event_id>')
 def get_event(event_id):
@@ -38,24 +41,13 @@ def get_event(event_id):
 #def new_eventmap():
     return render_template('googlemaps_input.html')
 
-#@app.post('/events')
-#def create_event_map():
-    user_address = request.form['address']
-    event_address = gmaps.geocode(user_address)
-
-    #if not event_address:
-     #   return 'Bad Request', 400
-    # More tests to be added
-    event_repo.create_event(event_address)
-    return redirect('/events/new')
-
 @app.get('/events/new')
 def new_event():
     return render_template('create_event.html')
 
 
 
-@app.route('/events/new', methods=['GET', 'POST'])
+@app.post('/events')
 def create_event():
     host_id = request.form['host_id']
     event_name = request.form['event_name']
@@ -64,7 +56,8 @@ def create_event():
     end_time = request.form['end_time']
     user_address = request.form['user_address']
     geocode_result = gmaps.geocode(user_address)
-    event_address = geocode_result[0]["geometry"]["location"]["lat"]
+    print(geocode_result)
+    event_address = geocode_result[0]["place_id"]
     #test - print results
     #lon = geocode_result[0]["geometry"]["location"]["lng"]
     
