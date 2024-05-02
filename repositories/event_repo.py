@@ -61,13 +61,7 @@ def delete_event(event_id : int):
         with conn.cursor(row_factory=dict_row) as cur:
             cur.execute('''
                         DELETE
-                            event_id,
-                            event_name, 
-                            event_description,
-                            start_time,
-                            end_time, 
-                            event_address
-                        FROM 
+                        FROM
                             events
                         WHERE event_id = %s
                         ;
