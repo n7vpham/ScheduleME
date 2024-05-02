@@ -8,7 +8,11 @@
     <h2>Create Event</h2>
 </div>
 <form action="/events" method="POST">
-    
+    <div class="mb-3">
+        <label for="host_id" class="form-label">Host ID</label>
+        <input type="number" min="1" class="form-control" id="host_id" name="host_id" required
+            placeholder="Enter YOUR ID">
+    </div>
     <div class="mb-3">
         <label for="event_name" class="form-label">Event Name</label>
         <input type="text" class="form-control" id="event_name" name="event_name" required
@@ -20,21 +24,21 @@
             placeholder="Enter its description"></textarea>
     </div>
     <div class="mb-3">
-        <label for="start_time" class="form-label">Start Time (WIP)</label>
-        <input type="text" class="form-control" id="start_time" name="start_time" required
+        <label for="start_time" class="form-label">Start Time</label>
+        <input type="datetime-local" class="form-control" id="start_time" name="start_time" required
             placeholder="Enter start time"> <!-- type="datetime-local" -->
     </div>
     <div class="mb-3">
-        <label for="end_time" class="form-label">End Time (WIP)</label>
-        <input type="text" class="form-control" id="end_time" name="end_time" required placeholder="Enter end time">
+        <label for="end_time" class="form-label">End Time</label>
+        <input type="datetime-local" class="form-control" id="end_time" name="end_time" required placeholder="Enter end time">
         <!-- type="datetime-local" -->
     </div>
     <div class="mb-3">
-        <label for="event_address" class="form-label">Address (WIP - need GOOGLE MAP API)</label>
-        <input type="text" class="form-control" id="event_address" name="event_address" required
+        <label for="user_address" class="form-label">Address</label>
+        <input type="text" class="form-control" id="user_address" name="user_address" required
             placeholder="Enter event address">
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+    </form>
 
 {% endblock %}
