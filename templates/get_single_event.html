@@ -4,16 +4,6 @@
 
 {% block body %}
 
-<style>
-    iframe {
-        display: block;
-        border-style:none;
-        margin: 0 auto;
-    }
-
-</style>
-
-
 <div class="col-12 text-center mt-3">
     <h2>Event Details</h2>
 </div>
@@ -26,15 +16,5 @@
     <li>End Time: {{ event.end_time }}</li>
     <li>Address: {{ event.event_address }}</li>
 </ul>
-<iframe
-  width="600"
-  height="450"
-  style="border:0"
-  loading="lazy"
-  allowfullscreen
-  referrerpolicy="no-referrer-when-downgrade"
-  src="https://www.google.com/maps/embed/v1/place?key=AIzaSyDUNewuSDlRLem-I3kcBnvU6467VleNicM
-    &q=' + {{ event.event_address }}'">
-</iframe>
 
 {% endblock %}

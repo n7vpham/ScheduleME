@@ -28,22 +28,16 @@ def index():
 @app.get('/events')
 def list_all_events():
     all_events = event_repo.get_all_events_for_table()
-    return render_template('list_all_events.html', events=all_events )
+    return render_template('list_all_events.html', events=all_events)
 
 @app.get('/events/<int:event_id>')
 def get_event(event_id):
     event = event_repo.get_event_by_id(event_id)
     return render_template('get_single_event.html', event=event)
 
-#@app.get('/events/newmap')
-#def new_eventmap():
-    return render_template('googlemaps_input.html')
-
 @app.get('/events/new')
 def new_event():
     return render_template('create_event.html')
-
-
 
 @app.post('/events')
 def create_event():
@@ -56,25 +50,15 @@ def create_event():
     event_description = request.form['event_description']
     start_time = request.form['start_time']
     end_time = request.form['end_time']
-    user_address = request.form['user_address']
-    geocode_result = gmaps.geocode(user_address)
-    event_address_pre = geocode_result[0]["place_id"]
-
-    rev_geocode_result = gmaps.reverse_geocode(event_address_pre)
-    event_address = rev_geocode_result[0]["formatted_address"]
-    
-    #test - print results
-    #lon = geocode_result[0]["geometry"]["location"]["lng"]
-    
-    if not host_id or not event_name or not event_description or not start_time or not end_time:
-
+    event_address = request.form['event_address']
+    #removing host_id from the if statement
+    if event_name or not event_description or not start_time or not end_time or not event_address:
         return 'Bad Request', 400
     # More tests to be added
     
     event_repo.create_event(host_id, event_name, event_description, start_time, end_time, event_address)
     #return redirect('/events')
     return "Event Created Successfully! ", 201
-
 
 @app.get('/users')
 def new_user():
@@ -96,7 +80,6 @@ def register():
     user_repository.create_user(user_fname, user_lname, user_email, hashed_password)
     return redirect('/users')
 
-
 @app.get('/login')
 def nav_login():
     return render_template('login.html')
@@ -114,7 +97,6 @@ def login():
         abort(401)
     session['user_email'] = user['user_email']
     return render_template('create_event.html') 
-
 
 @app.post('/logout')
 def logout():
